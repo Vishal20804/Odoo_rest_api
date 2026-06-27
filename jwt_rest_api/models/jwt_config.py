@@ -1,7 +1,9 @@
 from odoo import models, fields, api
+from odoo.http import request
+from odoo.exceptions import AccessDenied
 from datetime import datetime, timedelta
-import secrets
 import jwt
+import secrets
 
 print(jwt)
 print(jwt.__file__)
@@ -17,9 +19,6 @@ class JWTConfig(models.Model):
 
     def _get_secret_key(self):
 
-        print(jwt)
-        print(jwt.__file__)
-        print(dir(jwt))
         config = self.search([('key','=','jwt_secret')],limit=1)
         if not config:
             secret = secrets.token_hex(32)
@@ -77,16 +76,33 @@ class JWTConfig(models.Model):
             'refresh_expiry': refresh_expiry,
         }
     
-    def verify_access_token(self,token):
-        secret_key = self._get_secret_key()
-        payload = jwt.decode(
+    def verify_access_token(self):
+        authorization = request.httprequest.headers.get("Authorization")
+        if not authorization:
+            raise AccessDenied("Authorization header is missing.")
+        if not authorization.startswith("Bearer "):
+            raise AccessDenied("Invalid Authorization Header.")
+        token = authorization.split(" ")[1]
+        try:
+            secret_key = self._get_secret_key()
+            payload = jwt.decode(
                 token,
                 secret_key,
-                algorithms=['HS256']
+                algorithms=["HS256"]
             )
-        if payload.get('type')!='access':
-            raise Exception('Invalid Access Token')
-        return payload
+
+            if payload.get("type")!="access":
+                raise AccessDenied("Invalid access token")
+            user = self.env['res.users'].sudo().browse(payload.get("uid"))
+            if not user.exists():
+                raise AccessDenied("User not found")
+            return user
+        except jwt.ExpiredSignatureError:
+            raise AccessDenied("Access token has expired.")
+
+        except jwt.InvalidTokenError:
+            raise AccessDenied("Invalid access token.")
+
         
     def verify_refresh_token(self, token):
         secret_key = self._get_secret_key()
