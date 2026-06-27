@@ -1,7 +1,7 @@
-# JWT REST API Module for Odoo 18
+# JWT REST API Module for Odoo 1
 **Module Technical Name:** `jwt_rest_api`  
 **Author:** Vishal Sharma  
-**Version:** 18.0.1.0.0
+**Version:** 19.0.1.0.0
 
 ---
 
