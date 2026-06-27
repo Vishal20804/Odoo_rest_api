@@ -90,7 +90,7 @@ class JWTConfig(models.Model):
                 secret_key,
                 algorithms=["HS256"]
             )
-
+            # print("payload----------",payload)
             if payload.get("type")!="access":
                 raise AccessDenied("Invalid access token")
             user = self.env['res.users'].sudo().browse(payload.get("uid"))

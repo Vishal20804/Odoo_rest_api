@@ -235,15 +235,15 @@ def delete_product():
 while True:
 
     print("""
-==================================
-1. Signup
-2. Login
-3. List Products
-4. Create Product
-5. Update Product
-6. Delete Product
-7. Exit
-==================================
+        ==================================
+        1. Signup
+        2. Login
+        3. List Products
+        4. Create Product
+        5. Update Product
+        6. Delete Product
+        7. Exit
+        ==================================
 """)
 
     choice = input("Choice : ")
