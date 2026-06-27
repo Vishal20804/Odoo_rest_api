@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!--  Top-level Menu: JWT REST API                                  -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <menuitem id="menu_jwt_root"
+                  name="JWT REST API"
+                  sequence="100"
+                  groups="base.group_system"/>
+
+        <!-- Sub-menu: Token Management -->
+        <menuitem id="menu_jwt_tokens"
+                  name="Token Management"
+                  parent="menu_jwt_root"
+                  sequence="10"
+                  groups="base.group_system"/>
+
+        <!-- Menu Item: All Tokens -->
+        <menuitem id="menu_jwt_token_list"
+                  name="All Tokens"
+                  parent="menu_jwt_tokens"
+                  action="action_jwt_token"
+                  sequence="10"
+                  groups="base.group_system"/>
+
+        <!-- Sub-menu: Configuration -->
+        <menuitem id="menu_jwt_config"
+                  name="Configuration"
+                  parent="menu_jwt_root"
+                  sequence="20"
+                  groups="base.group_system"/>
+
+        <!-- Menu Item: System Parameters (Secret Key yahan hogi) -->
+        <menuitem id="menu_jwt_secret"
+                  name="Secret Key (System Parameters)"
+                  parent="menu_jwt_config"
+                  action="base_setup.action_general_configuration"
+                  sequence="10"
+                  groups="base.group_system"/>
+
+    </data>
+</odoo>

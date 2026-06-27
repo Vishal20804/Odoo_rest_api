@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jwt_token_list" model="ir.ui.view">
+            <field name="name">jwt.token.list</field>
+            <field name="model">jwt.token</field>
+            <field name="arch" type="xml">
+                <list string="JWT Tokens"
+                      decoration-danger="is_revoked == True"
+                      decoration-warning="access_token_status == 'expired'"
+                      decoration-success="access_token_status == 'active'">
+                    <field name="user_id"/>
+                    <field name="access_token_status"  string="Access"/>
+                    <field name="refresh_token_status" string="Refresh"/>
+                    <field name="access_expires_at"    string="Access Expires"/>
+                    <field name="refresh_expires_at"   string="Refresh Expires"/>
+                    <field name="is_revoked"/>
+                    <field name="ip_address"           string="IP"/>
+                    <field name="last_used"            string="Last Used"/>
+                    <field name="create_date"          string="Created"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_jwt_token_form" model="ir.ui.view">
+            <field name="name">jwt.token.form</field>
+            <field name="model">jwt.token</field>
+            <field name="arch" type="xml">
+                <form string="JWT Token Detail">
+                    <header>
+                        <!-- <button name="revoke_token"
+                                string="Revoke Token"
+                                type="object"
+                                class="btn-danger"
+                                confirm="Kya aap is token ko revoke karna chahte hain? Yeh user ko logout kar dega."
+                                invisible="is_revoked == True"/> -->
+                        <field name="is_revoked" />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="user_id" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Token Status">
+                                <field name="access_token_status"
+                                       string="Access Token Status"/>
+                                <field name="refresh_token_status"
+                                       string="Refresh Token Status"/>
+                                <field name="is_revoked"/>
+                                <field name="last_used"/>
+                            </group>
+                            <group string="Expiry Info">
+                                <field name="access_expires_at"/>
+                                <field name="refresh_expires_at"/>
+                                <field name="create_date" string="Created At"/>
+                                <field name="secret_key" />
+                            </group>
+                        </group>
+
+                        <group string="Client Info">
+                            <field name="ip_address"/>
+                            <field name="user_agent"/>
+                        </group>
+
+                        <notebook>
+                            <page string="Access Token" name="access_token">
+                                <field name="access_token"
+                                       widget="text"
+                                       readonly="1"
+                                       style="font-family: monospace; font-size: 11px; word-break: break-all;"/>
+                            </page>
+                            <page string="Refresh Token" name="refresh_token">
+                                <field name="refresh_token"
+                                       widget="text"
+                                       readonly="1"
+                                       style="font-family: monospace; font-size: 11px; word-break: break-all;"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_jwt_token" model="ir.actions.act_window">
+            <field name="name">JWT Tokens</field>
+            <field name="res_model">jwt.token</field>
+            <field name="view_mode">list,form</field>
+            <!-- <field name="search_view_id" ref="view_jwt_token_search"/> -->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Abhi koi JWT Token nahi hai!
+                </p>
+                <p>
+                    Jab koi user /api/v1/auth/login ya /api/v1/auth/signup
+                    call karega, token yahan dikh jayega.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
